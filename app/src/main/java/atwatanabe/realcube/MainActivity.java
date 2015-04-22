@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -22,6 +23,42 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v)
             {
                 Intent intent = new Intent(MainActivity.this, OptionsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton twoByTwo = (ImageButton)findViewById(R.id.twoByTwo);
+        twoByTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton threeByThree = (ImageButton)findViewById(R.id.threeByThree);
+        threeByThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton fourByFour = (ImageButton)findViewById(R.id.fourByFour);
+        fourByFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton fiveByFive = (ImageButton)findViewById(R.id.fiveByFive);
+        fiveByFive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GameActivity.class);
                 startActivity(intent);
             }
         });
