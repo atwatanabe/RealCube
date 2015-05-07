@@ -8,6 +8,9 @@
     <string name="redo">Redo</string>
     <string name="solve">Solve</string>
     <string name="scramble">Scramble</string>
+    <string name="rotate">Hold to rotate cube</string>
+    <string name="moveLog">Move Log:</string>
+    <string name="defaultSettings">Restore Defaults</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_game">GameActivity</string>
 </resources>
