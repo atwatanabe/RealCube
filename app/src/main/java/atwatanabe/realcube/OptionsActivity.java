@@ -23,8 +23,6 @@ public class OptionsActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options);
 
-        //cubeManipProgress = cubeRotateProgress = 50;    //load values
-
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
         int cubeManipProgress = settings.getInt("cubeManip", 50),
             cubeRotateProgress = settings.getInt("cubeRotate", 50);
@@ -45,11 +43,7 @@ public class OptionsActivity extends ActionBarActivity
                 rotateBar.setProgress(50);
             }
         });
-
     }
-
-
-
 
     @Override
     protected void onStop()
@@ -57,7 +51,6 @@ public class OptionsActivity extends ActionBarActivity
         super.onStop();
         SharedPreferences settings = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-
 
         SeekBar manipBar = (SeekBar) findViewById(R.id.cubeManip);
         SeekBar rotateBar = (SeekBar) findViewById(R.id.cubeRotate);
