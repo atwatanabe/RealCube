@@ -19,7 +19,6 @@ import android.widget.TextView;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.EventListener;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -39,6 +38,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
     private boolean[][] pressed;
 
     private float[] rotationValues;
+    private float[] startValues;
+    private float[] stopValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,7 +49,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_GAME);
 
         valuesDisplay = (TextView)findViewById(R.id.valsDisplay);
 
@@ -65,11 +66,18 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         buttons[0][1] = (Button)findViewById(R.id.upCenter);
         buttons[0][2] = (Button)findViewById(R.id.upRight);
         buttons[1][0] = (Button)findViewById(R.id.middleLeft);
-        buttons[1][1] = (Button)findViewById(R.id.middle);
+        buttons[1][1] = (Button)findViewById(R.id.middleCenter);
         buttons[1][2] = (Button)findViewById(R.id.middleRight);
         buttons[2][0] = (Button)findViewById(R.id.downLeft);
         buttons[2][1] = (Button)findViewById(R.id.downCenter);
         buttons[2][2] = (Button)findViewById(R.id.downRight);
+
+        cube = new Cube3x3();
+        cubeManipulator = new CubeManipulator();
+
+        //rotationValues = new float[3];
+        startValues = new float[3];
+        stopValues = new float[3];
 
         buttons[0][0].setOnTouchListener(
             new View.OnTouchListener() {
@@ -77,9 +85,53 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                 public boolean onTouch(View v, MotionEvent m)
                 {
                     if (m.getAction() == MotionEvent.ACTION_DOWN)
+                    {
                         pressed[0][0] = true;
+                        System.arraycopy(rotationValues, 0, startValues, 0, 3);
+                    }
                     else if (m.getAction() == MotionEvent.ACTION_UP)
+                    {
                         pressed[0][0] = false;
+                        System.arraycopy(rotationValues, 0, stopValues, 0, 3);
+                        //Log.i("StartValues: ", new Float(startValues[0]).toString() + ", " + new Float(startValues[1]).toString() + ", " + new Float(startValues[2]).toString());
+                        //Log.i("StopValues: ", new Float(stopValues[0]).toString() + ", " + new Float(stopValues[1]).toString() + ", " + new Float(stopValues[2]).toString());
+                        rotation largest = getLargest();
+                        Command cmd = new LeftCommand(cube, false);
+                        switch (largest)
+                        {
+                            case X:
+                            {
+                                cmd = new UpCommand(cube, false);
+                                break;
+                            }
+                            case X_:
+                            {
+                                cmd = new UpCommand(cube, true);
+                                break;
+                            }
+                            case Y_:
+                            {
+                                cmd = new LeftCommand(cube, true);
+                                break;
+                            }
+                            case Y:
+                            {
+                                cmd = new LeftCommand(cube, false);
+                                break;
+                            }
+                            case Z:
+                            {
+                                cmd = new FrontCommand(cube, true);
+                                break;
+                            }
+                            case Z_:
+                            {
+                                cmd = new FrontCommand(cube, false);
+                                break;
+                            }
+                        }
+                        cubeManipulator.manipulateCube(cmd);
+                    }
                     return true;
                 }
             }
@@ -90,10 +142,50 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                 @Override
                 public boolean onTouch(View v, MotionEvent m)
                 {
-                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                    if (m.getAction() == MotionEvent.ACTION_DOWN) {
                         pressed[0][1] = true;
+                        System.arraycopy(rotationValues, 0, startValues, 0, 3);
+                    }
                     else if (m.getAction() == MotionEvent.ACTION_UP)
+                    {
                         pressed[0][1] = false;
+                        System.arraycopy(rotationValues, 0, stopValues, 0, 3);rotation largest = getLargest();
+                        Command cmd = new LeftCommand(cube, false);
+                        switch (largest)
+                        {
+                            case X:
+                            {
+                                cmd = new UpCommand(cube, false);
+                                break;
+                            }
+                            case X_:
+                            {
+                                cmd = new UpCommand(cube, true);
+                                break;
+                            }
+                            case Y_:
+                            {
+                                cmd = new MiddleCommand(cube, true);
+                                break;
+                            }
+                            case Y:
+                            {
+                                cmd = new MiddleCommand(cube, false);
+                                break;
+                            }
+                            case Z:
+                            {
+                                cmd = new FrontCommand(cube, true);
+                                break;
+                            }
+                            case Z_:
+                            {
+                                cmd = new FrontCommand(cube, false);
+                                break;
+                            }
+                        }
+                        cubeManipulator.manipulateCube(cmd);
+                    }
                     return true;
                 }
             }
@@ -105,9 +197,50 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                 public boolean onTouch(View v, MotionEvent m)
                 {
                     if (m.getAction() == MotionEvent.ACTION_DOWN)
+                    {
                         pressed[0][2] = true;
+                        System.arraycopy(rotationValues, 0, startValues, 0, 3);
+                    }
                     else if (m.getAction() == MotionEvent.ACTION_UP)
+                    {
                         pressed[0][2] = false;
+                        System.arraycopy(rotationValues, 0, stopValues, 0, 3);rotation largest = getLargest();
+                        Command cmd = new LeftCommand(cube, false);
+                        switch (largest)
+                        {
+                            case X:
+                            {
+                                cmd = new UpCommand(cube, false);
+                                break;
+                            }
+                            case X_:
+                            {
+                                cmd = new UpCommand(cube, true);
+                                break;
+                            }
+                            case Y_:
+                            {
+                                cmd = new RightCommand(cube, false);
+                                break;
+                            }
+                            case Y:
+                            {
+                                cmd = new RightCommand(cube, true);
+                                break;
+                            }
+                            case Z:
+                            {
+                                cmd = new FrontCommand(cube, true);
+                                break;
+                            }
+                            case Z_:
+                            {
+                                cmd = new FrontCommand(cube, false);
+                                break;
+                            }
+                        }
+                        cubeManipulator.manipulateCube(cmd);
+                    }
                     return true;
                 }
             }
@@ -119,9 +252,50 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                 public boolean onTouch(View v, MotionEvent m)
                 {
                     if (m.getAction() == MotionEvent.ACTION_DOWN)
+                    {
                         pressed[1][0] = true;
+                        System.arraycopy(rotationValues, 0, startValues, 0, 3);
+                    }
                     else if (m.getAction() == MotionEvent.ACTION_UP)
+                    {
                         pressed[1][0] = false;
+                        System.arraycopy(rotationValues, 0, stopValues, 0, 3);rotation largest = getLargest();
+                        Command cmd = new LeftCommand(cube, false);
+                        switch (largest)
+                        {
+                            case X:
+                            {
+                                cmd = new EquatorCommand(cube, true);
+                                break;
+                            }
+                            case X_:
+                            {
+                                cmd = new EquatorCommand(cube, false);
+                                break;
+                            }
+                            case Y_:
+                            {
+                                cmd = new LeftCommand(cube, true);
+                                break;
+                            }
+                            case Y:
+                            {
+                                cmd = new LeftCommand(cube, false);
+                                break;
+                            }
+                            case Z:
+                            {
+                                cmd = new FrontCommand(cube, true);
+                                break;
+                            }
+                            case Z_:
+                            {
+                                cmd = new FrontCommand(cube, false);
+                                break;
+                            }
+                        }
+                        cubeManipulator.manipulateCube(cmd);
+                    }
                     return true;
                 }
             }
@@ -133,76 +307,295 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                 public boolean onTouch(View v, MotionEvent m)
                 {
                     if (m.getAction() == MotionEvent.ACTION_DOWN)
+                    {
                         pressed[1][1] = true;
+                        System.arraycopy(rotationValues, 0, startValues, 0, 3);
+                    }
                     else if (m.getAction() == MotionEvent.ACTION_UP)
+                    {
                         pressed[1][1] = false;
+                        System.arraycopy(rotationValues, 0, stopValues, 0, 3);rotation largest = getLargest();
+                        Command cmd = new LeftCommand(cube, false);
+                        switch (largest)
+                        {
+                            case X:
+                            {
+                                cmd = new EquatorCommand(cube, true);
+                                break;
+                            }
+                            case X_:
+                            {
+                                cmd = new EquatorCommand(cube, false);
+                                break;
+                            }
+                            case Y_:
+                            {
+                                cmd = new MiddleCommand(cube, true);
+                                break;
+                            }
+                            case Y:
+                            {
+                                cmd = new MiddleCommand(cube, false);
+                                break;
+                            }
+                            case Z:
+                            {
+                                cmd = new FrontCommand(cube, true);
+                                break;
+                            }
+                            case Z_:
+                            {
+                                cmd = new FrontCommand(cube, false);
+                                break;
+                            }
+                        }
+                        cubeManipulator.manipulateCube(cmd);
+                    }
                     return true;
                 }
             }
         );
 
         buttons[1][2].setOnTouchListener(
-            new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent m)
-                {
-                    if (m.getAction() == MotionEvent.ACTION_DOWN)
-                        pressed[1][2] = true;
-                    else if (m.getAction() == MotionEvent.ACTION_UP)
-                        pressed[1][2] = false;
-                    return true;
+                new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent m) {
+                        if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        {
+                            pressed[1][2] = true;
+                            System.arraycopy(rotationValues, 0, startValues, 0, 3);
+                        } else if (m.getAction() == MotionEvent.ACTION_UP)
+                        {
+                            pressed[1][2] = false;
+                            System.arraycopy(rotationValues, 0, stopValues, 0, 3);rotation largest = getLargest();
+                            Command cmd = new LeftCommand(cube, false);
+                            switch (largest)
+                            {
+                                case X:
+                                {
+                                    cmd = new EquatorCommand(cube, true);
+                                    break;
+                                }
+                                case X_:
+                                {
+                                    cmd = new EquatorCommand(cube, false);
+                                    break;
+                                }
+                                case Y_:
+                                {
+                                    cmd = new RightCommand(cube, false);
+                                    break;
+                                }
+                                case Y:
+                                {
+                                    cmd = new RightCommand(cube, true);
+                                    break;
+                                }
+                                case Z:
+                                {
+                                    cmd = new FrontCommand(cube, true);
+                                    break;
+                                }
+                                case Z_:
+                                {
+                                    cmd = new FrontCommand(cube, false);
+                                    break;
+                                }
+                            }
+                            cubeManipulator.manipulateCube(cmd);
+                        }
+                        return true;
+                    }
                 }
-            }
         );
 
         buttons[2][0].setOnTouchListener(
-            new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent m)
-                {
-                    if (m.getAction() == MotionEvent.ACTION_DOWN)
-                        pressed[2][0] = true;
-                    else if (m.getAction() == MotionEvent.ACTION_UP)
-                        pressed[2][0] = false;
-                    return true;
+                new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent m) {
+                        if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        {
+                            pressed[2][0] = true;
+                            System.arraycopy(rotationValues, 0, startValues, 0, 3);
+                        } else if (m.getAction() == MotionEvent.ACTION_UP)
+                        {
+                            pressed[2][0] = false;
+                            System.arraycopy(rotationValues, 0, stopValues, 0, 3);rotation largest = getLargest();
+                            Command cmd = new LeftCommand(cube, false);
+                            switch (largest)
+                            {
+                                case X:
+                                {
+                                    cmd = new DownCommand(cube, true);
+                                    break;
+                                }
+                                case X_:
+                                {
+                                    cmd = new DownCommand(cube, false);
+                                    break;
+                                }
+                                case Y_:
+                                {
+                                    cmd = new LeftCommand(cube, true);
+                                    break;
+                                }
+                                case Y:
+                                {
+                                    cmd = new LeftCommand(cube, false);
+                                    break;
+                                }
+                                case Z:
+                                {
+                                    cmd = new FrontCommand(cube, true);
+                                    break;
+                                }
+                                case Z_:
+                                {
+                                    cmd = new FrontCommand(cube, false);
+                                    break;
+                                }
+                            }
+                            cubeManipulator.manipulateCube(cmd);
+                        }
+                        return true;
+                    }
                 }
-            }
         );
 
         buttons[2][1].setOnTouchListener(
-            new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent m)
-                {
-                    if (m.getAction() == MotionEvent.ACTION_DOWN)
-                        pressed[2][1] = true;
-                    else if (m.getAction() == MotionEvent.ACTION_UP)
-                        pressed[2][1] = false;
-                    return true;
+                new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent m) {
+                        if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        {
+                            pressed[2][1] = true;
+                            System.arraycopy(rotationValues, 0, startValues, 0, 3);
+                        } else if (m.getAction() == MotionEvent.ACTION_UP)
+                        {
+                            pressed[2][1] = false;
+                            System.arraycopy(rotationValues, 0, stopValues, 0, 3);rotation largest = getLargest();
+                            Command cmd = new LeftCommand(cube, false);
+                            switch (largest)
+                            {
+                                case X:
+                                {
+                                    cmd = new DownCommand(cube, true);
+                                    break;
+                                }
+                                case X_:
+                                {
+                                    cmd = new DownCommand(cube, false);
+                                    break;
+                                }
+                                case Y_:
+                                {
+                                    cmd = new MiddleCommand(cube, true);
+                                    break;
+                                }
+                                case Y:
+                                {
+                                    cmd = new MiddleCommand(cube, false);
+                                    break;
+                                }
+                                case Z:
+                                {
+                                    cmd = new FrontCommand(cube, true);
+                                    break;
+                                }
+                                case Z_:
+                                {
+                                    cmd = new FrontCommand(cube, false);
+                                    break;
+                                }
+                            }
+                            cubeManipulator.manipulateCube(cmd);
+                        }
+                        return true;
+                    }
                 }
-            }
         );
 
         buttons[2][2].setOnTouchListener(
-            new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent m)
-                {
-                    if (m.getAction() == MotionEvent.ACTION_DOWN)
-                        pressed[2][2] = true;
-                    else if (m.getAction() == MotionEvent.ACTION_UP)
-                        pressed[2][2] = false;
-                    return true;
+                new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent m) {
+                        if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        {
+                            pressed[2][2] = true;
+                            System.arraycopy(rotationValues, 0, startValues, 0, 3);
+                        } else if (m.getAction() == MotionEvent.ACTION_UP)
+                        {
+                            pressed[2][2] = false;
+                            System.arraycopy(rotationValues, 0, stopValues, 0, 3);rotation largest = getLargest();
+                            Command cmd = new LeftCommand(cube, false);
+                            switch (largest)
+                            {
+                                case X:
+                                {
+                                    cmd = new DownCommand(cube, true);
+                                    break;
+                                }
+                                case X_:
+                                {
+                                    cmd = new DownCommand(cube, false);
+                                    break;
+                                }
+                                case Y_:
+                                {
+                                    cmd = new RightCommand(cube, false);
+                                    break;
+                                }
+                                case Y:
+                                {
+                                    cmd = new RightCommand(cube, true);
+                                    break;
+                                }
+                                case Z:
+                                {
+                                    cmd = new FrontCommand(cube, true);
+                                    break;
+                                }
+                                case Z_:
+                                {
+                                    cmd = new FrontCommand(cube, false);
+                                    break;
+                                }
+                            }
+                            cubeManipulator.manipulateCube(cmd);
+                        }
+                        return true;
+                    }
                 }
-            }
         );
 
+    }
+
+    public enum rotation
+    {
+        X, X_, Y, Y_, Z, Z_
+    }
+
+    public rotation getLargest()
+    {
+        float dx = stopValues[0] - startValues[0];
+        float dy = stopValues[1] - startValues[1];
+        float dz = stopValues[2] - startValues[2];
+
+        float adx = Math.abs(dx);
+        float ady = Math.abs(dy);
+        float adz = Math.abs(dz);
+
+        if (adx > ady && adx > adz)
+            return (dx >= 0) ? rotation.X : rotation.X_;
+        if (ady > adx && ady > adz)
+            return (dy >= 0) ? rotation.Y : rotation.Y_;
+        return (dz >= 0) ? rotation.Z : rotation.Z_;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_GAME);
         //renderer.start();
         //glView.onResume();
     }
@@ -233,7 +626,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                 //Log.i("test", "It worked!");
 
 
-            rotationValues = new float[] {event.values[0], event.values[1], event.values[2]};
+            rotationValues = new float[3];
+            System.arraycopy(event.values, 0, rotationValues, 0, 3);
 
             valuesDisplay = (TextView)findViewById(R.id.valsDisplay);
             if (event != null)
@@ -384,6 +778,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
             gl.glDrawElements(GL10.GL_TRIANGLES, 36, GL10.GL_UNSIGNED_BYTE, mIndexBuffer);
         }
     }
+
 
 
     @Override

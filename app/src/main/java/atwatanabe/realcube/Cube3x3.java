@@ -74,46 +74,46 @@ public class Cube3x3
 
     public void up(boolean invert)
     {
-        Log.i("Cube move", "up");
+        Log.i("Cube move", "up " + invert);
     }
 
     public void down(boolean invert)
     {
-        Log.i("Cube move", "down");
+        Log.i("Cube move", "down " + invert);
     }
 
     public void left(boolean invert)
     {
-        Log.i("Cube move", "left");
+        Log.i("Cube move", "left " + invert);
     }
 
     public void right(boolean invert)
     {
-        Log.i("Cube move", "right");
+        Log.i("Cube move", "right " + invert);
     }
 
     public void front(boolean invert)
     {
-        Log.i("Cube move", "front");
+        Log.i("Cube move", "front " + invert);
     }
 
     public void back(boolean invert)
     {
-        Log.i("Cube move", "back");
+        Log.i("Cube move", "back " + invert);
     }
 
     public void middle(boolean invert)
     {
-        Log.i("Cube move", "middle");
+        Log.i("Cube move", "middle " + invert);
     }
 
     public void equator(boolean invert)
     {
-        Log.i("Cube move", "equator");
+        Log.i("Cube move", "equator " + invert);
     }
 
     public void standing(boolean invert)
     {
-        Log.i("Cube move", "standing");
+        Log.i("Cube move", "standing " + invert);
     }
 }

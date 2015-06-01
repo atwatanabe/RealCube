@@ -1,6 +1,6 @@
 package atwatanabe.realcube;
 
-public class EquatorCommand
+public class EquatorCommand implements Command
 {
     private Cube3x3 cube;
     private boolean inverted;

@@ -1,6 +1,6 @@
 package atwatanabe.realcube;
 
-public class RightCommand
+public class RightCommand implements Command
 {
     private Cube3x3 cube;
     private boolean inverted;
