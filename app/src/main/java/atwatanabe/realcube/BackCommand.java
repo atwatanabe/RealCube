@@ -20,4 +20,10 @@ public class BackCommand implements Command
     {
         cube.back(!inverted);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Back " + inverted;
+    }
 }

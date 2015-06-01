@@ -20,4 +20,10 @@ public class StandingCommand implements Command
     {
         cube.standing(!inverted);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Standing " + inverted;
+    }
 }

@@ -32,24 +32,34 @@
     </LinearLayout>
 
     <!--TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Placeholder view"
-        android:layout_weight="1"/-->
-
-    <TextView
         android:id="@+id/logText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/moveLog"/>
+        android:text="@string/moveLog"/-->
 
     <TextView
-        android:id="@+id/valsDisplay"
+        android:id="@+id/valXDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0, 0, 0"
-        />
+        android:text="0"/>
 
+    <TextView
+        android:id="@+id/valYDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"/>
+
+    <TextView
+        android:id="@+id/valZDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"/>
+
+    <TextView
+        android:id="@+id/moveText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/moveLog"/>
 
 
     <LinearLayout

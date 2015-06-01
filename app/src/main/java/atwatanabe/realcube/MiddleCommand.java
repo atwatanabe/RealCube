@@ -20,4 +20,10 @@ public class MiddleCommand implements Command
     {
         cube.middle(!inverted);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Middle " + inverted;
+    }
 }

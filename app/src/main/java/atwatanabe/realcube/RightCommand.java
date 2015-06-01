@@ -20,4 +20,10 @@ public class RightCommand implements Command
     {
         cube.right(!inverted);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Right " + inverted;
+    }
 }

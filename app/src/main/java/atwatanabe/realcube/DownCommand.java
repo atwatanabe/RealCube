@@ -20,4 +20,10 @@ public class DownCommand implements Command
     {
         cube.down(!inverted);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Down " + inverted;
+    }
 }

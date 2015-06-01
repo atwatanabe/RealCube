@@ -30,7 +30,11 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
     private SensorManager sensorManager;
     private CubeRenderer renderer;
     private GLSurfaceView glView;
-    private TextView valuesDisplay;
+    private TextView valXDisplay;
+    private TextView valYDisplay;
+    private TextView valZDisplay;
+    private TextView moveText;
+    private Command mostRecentMove;
 
     private CubeManipulator cubeManipulator;
     private Cube3x3 cube;
@@ -51,7 +55,11 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_GAME);
 
-        valuesDisplay = (TextView)findViewById(R.id.valsDisplay);
+        valXDisplay = (TextView)findViewById(R.id.valXDisplay);
+        valYDisplay = (TextView)findViewById(R.id.valYDisplay);
+        valYDisplay = (TextView)findViewById(R.id.valYDisplay);
+
+
 
         //renderer = new CubeRenderer();
         //glView = new GLSurfaceView(this);
@@ -78,6 +86,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         //rotationValues = new float[3];
         startValues = new float[3];
         stopValues = new float[3];
+
+        moveText = (TextView) findViewById(R.id.moveText);
 
         buttons[0][0].setOnTouchListener(
             new View.OnTouchListener() {
@@ -131,6 +141,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                             }
                         }
                         cubeManipulator.manipulateCube(cmd);
+                        mostRecentMove = cmd;
+                        moveText.setText(cmd.toString());
                     }
                     return true;
                 }
@@ -185,6 +197,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                             }
                         }
                         cubeManipulator.manipulateCube(cmd);
+                        mostRecentMove = cmd;
+                        moveText.setText(cmd.toString());
                     }
                     return true;
                 }
@@ -240,6 +254,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                             }
                         }
                         cubeManipulator.manipulateCube(cmd);
+                        mostRecentMove = cmd;
+                        moveText.setText(cmd.toString());
                     }
                     return true;
                 }
@@ -295,6 +311,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                             }
                         }
                         cubeManipulator.manipulateCube(cmd);
+                        mostRecentMove = cmd;
+                        moveText.setText(cmd.toString());
                     }
                     return true;
                 }
@@ -350,6 +368,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                             }
                         }
                         cubeManipulator.manipulateCube(cmd);
+                        mostRecentMove = cmd;
+                        moveText.setText(cmd.toString());
                     }
                     return true;
                 }
@@ -403,6 +423,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                                 }
                             }
                             cubeManipulator.manipulateCube(cmd);
+                            mostRecentMove = cmd;
+                            moveText.setText(cmd.toString());
                         }
                         return true;
                     }
@@ -456,6 +478,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                                 }
                             }
                             cubeManipulator.manipulateCube(cmd);
+                            mostRecentMove = cmd;
+                            moveText.setText(cmd.toString());
                         }
                         return true;
                     }
@@ -509,6 +533,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                                 }
                             }
                             cubeManipulator.manipulateCube(cmd);
+                            mostRecentMove = cmd;
+                            moveText.setText(cmd.toString());
                         }
                         return true;
                     }
@@ -562,11 +588,36 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                                 }
                             }
                             cubeManipulator.manipulateCube(cmd);
+                            mostRecentMove = cmd;
+                            moveText.setText(cmd.toString());
                         }
                         return true;
                     }
                 }
         );
+
+        Button undo = (Button)findViewById(R.id.undoButton);
+        Button redo = (Button)findViewById(R.id.redoButton);
+
+        undo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                mostRecentMove = cubeManipulator.undo();
+                if (mostRecentMove != null)
+                    moveText.setText(mostRecentMove.toString());
+            }
+        });
+
+        redo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                mostRecentMove = cubeManipulator.redo();
+                if (mostRecentMove != null)
+                    moveText.setText(mostRecentMove.toString());
+            }
+        });
 
     }
 
@@ -629,9 +680,15 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
             rotationValues = new float[3];
             System.arraycopy(event.values, 0, rotationValues, 0, 3);
 
-            valuesDisplay = (TextView)findViewById(R.id.valsDisplay);
+            valXDisplay = (TextView)findViewById(R.id.valXDisplay);
+            valYDisplay = (TextView)findViewById(R.id.valYDisplay);
+            valZDisplay = (TextView)findViewById(R.id.valZDisplay);
             if (event != null)
-                valuesDisplay.setText(event.values[0] + ", " + event.values[1] + ", " + event.values[2]);
+            {
+                valXDisplay.setText(new Float(event.values[0]).toString());
+                valYDisplay.setText(new Float(event.values[1]).toString());
+                valZDisplay.setText(new Float(event.values[2]).toString());
+            }
         }
     }
 

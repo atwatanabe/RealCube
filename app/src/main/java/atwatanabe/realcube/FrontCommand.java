@@ -20,4 +20,10 @@ public class FrontCommand implements Command
     {
         cube.front(!inverted);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Front " + inverted;
+    }
 }

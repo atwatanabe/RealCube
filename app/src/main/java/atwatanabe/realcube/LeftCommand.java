@@ -20,4 +20,10 @@ public class LeftCommand implements Command
     {
         cube.left(!inverted);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Left " + inverted;
+    }
 }

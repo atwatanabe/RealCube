@@ -19,21 +19,25 @@ public class CubeManipulator
         c.execute();
     }
 
-    public void undo()
+    public Command undo()
     {
         if (!undoHistory.isEmpty())
         {
             redoHistory.push(undoHistory.peek());
-            undoHistory.pop().unexecute();
+            undoHistory.peek().unexecute();
+            return undoHistory.pop();
         }
+        return null;
     }
 
-    public void redo()
+    public Command redo()
     {
         if (!redoHistory.isEmpty())
         {
             undoHistory.push(redoHistory.peek());
-            redoHistory.pop().execute();
+            redoHistory.peek().execute();
+            return redoHistory.pop();
         }
+        return null;
     }
 }

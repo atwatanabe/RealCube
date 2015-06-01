@@ -20,4 +20,10 @@ public class EquatorCommand implements Command
     {
         cube.equator(!inverted);
     }
+
+    @Override
+    public String toString()
+    {
+        return "Equator " + inverted;
+    }
 }
