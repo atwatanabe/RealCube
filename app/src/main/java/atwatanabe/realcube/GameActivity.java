@@ -14,21 +14,31 @@ import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.EventListener;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 
-public class GameActivity extends ActionBarActivity
+public class GameActivity extends ActionBarActivity implements SensorEventListener
 {
-
-    private SensorManager mSensorManager;
+    private Sensor sensor;
+    private SensorManager sensorManager;
     private CubeRenderer renderer;
     private GLSurfaceView glView;
+    private TextView valuesDisplay;
+
+    private CubeManipulator cubeManipulator;
+    private Cube3x3 cube;
+    private Button[][] buttons;
+    private boolean[][] pressed;
+
+    private float[] rotationValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,67 +46,205 @@ public class GameActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setTitle(R.string.app_name);
 
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        //mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        //mSensorManager.registerListener(this, mSensor, 10000);
-        renderer = new CubeRenderer();
-        glView = new GLSurfaceView(this);
-        glView.setRenderer(renderer);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_NORMAL);
 
-        //setContentView(R.layout.activity_game);
-        setContentView(glView);
+        valuesDisplay = (TextView)findViewById(R.id.valsDisplay);
 
-        /*
-        Button upLeft = (Button)findViewById(R.id.upLeft);
-        upLeft.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent m) {
+        //renderer = new CubeRenderer();
+        //glView = new GLSurfaceView(this);
+        //glView.setRenderer(renderer);
 
-                Log.i("move", "upLeft");
-                return true;
+        setContentView(R.layout.activity_game);
+
+        buttons = new Button[3][3];
+        pressed = new boolean[3][3];
+
+        buttons[0][0] = (Button)findViewById(R.id.upLeft);
+        buttons[0][1] = (Button)findViewById(R.id.upCenter);
+        buttons[0][2] = (Button)findViewById(R.id.upRight);
+        buttons[1][0] = (Button)findViewById(R.id.middleLeft);
+        buttons[1][1] = (Button)findViewById(R.id.middle);
+        buttons[1][2] = (Button)findViewById(R.id.middleRight);
+        buttons[2][0] = (Button)findViewById(R.id.downLeft);
+        buttons[2][1] = (Button)findViewById(R.id.downCenter);
+        buttons[2][2] = (Button)findViewById(R.id.downRight);
+
+        buttons[0][0].setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent m)
+                {
+                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        pressed[0][0] = true;
+                    else if (m.getAction() == MotionEvent.ACTION_UP)
+                        pressed[0][0] = false;
+                    return true;
+                }
             }
-        });
+        );
 
-        Button upCenter = (Button)findViewById(R.id.upCenter);
-        upCenter.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent m)
-            {
-                Log.i("move", "upCenter");
-                return true;
+        buttons[0][1].setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent m)
+                {
+                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        pressed[0][1] = true;
+                    else if (m.getAction() == MotionEvent.ACTION_UP)
+                        pressed[0][1] = false;
+                    return true;
+                }
             }
-        });
-        */
+        );
+
+        buttons[0][2].setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent m)
+                {
+                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        pressed[0][2] = true;
+                    else if (m.getAction() == MotionEvent.ACTION_UP)
+                        pressed[0][2] = false;
+                    return true;
+                }
+            }
+        );
+
+        buttons[1][0].setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent m)
+                {
+                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        pressed[1][0] = true;
+                    else if (m.getAction() == MotionEvent.ACTION_UP)
+                        pressed[1][0] = false;
+                    return true;
+                }
+            }
+        );
+
+        buttons[1][1].setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent m)
+                {
+                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        pressed[1][1] = true;
+                    else if (m.getAction() == MotionEvent.ACTION_UP)
+                        pressed[1][1] = false;
+                    return true;
+                }
+            }
+        );
+
+        buttons[1][2].setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent m)
+                {
+                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        pressed[1][2] = true;
+                    else if (m.getAction() == MotionEvent.ACTION_UP)
+                        pressed[1][2] = false;
+                    return true;
+                }
+            }
+        );
+
+        buttons[2][0].setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent m)
+                {
+                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        pressed[2][0] = true;
+                    else if (m.getAction() == MotionEvent.ACTION_UP)
+                        pressed[2][0] = false;
+                    return true;
+                }
+            }
+        );
+
+        buttons[2][1].setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent m)
+                {
+                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        pressed[2][1] = true;
+                    else if (m.getAction() == MotionEvent.ACTION_UP)
+                        pressed[2][1] = false;
+                    return true;
+                }
+            }
+        );
+
+        buttons[2][2].setOnTouchListener(
+            new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent m)
+                {
+                    if (m.getAction() == MotionEvent.ACTION_DOWN)
+                        pressed[2][2] = true;
+                    else if (m.getAction() == MotionEvent.ACTION_UP)
+                        pressed[2][2] = false;
+                    return true;
+                }
+            }
+        );
+
     }
 
     @Override
     protected void onResume() {
-        // Ideally a game should implement onResume() and onPause()
-        // to take appropriate action when the activity looses focus
         super.onResume();
-        renderer.start();
-        glView.onResume();
+        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_FASTEST);
+        //renderer.start();
+        //glView.onResume();
     }
     @Override
     protected void onPause() {
-        // Ideally a game should implement onResume() and onPause()
-        // to take appropriate action when the activity looses focus
         super.onPause();
-        renderer.stop();
-        glView.onPause();
+        sensorManager.unregisterListener(this);
+        //renderer.stop();
+        //glView.onPause();
     }
 
-    /*
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        sensorManager.unregisterListener(this);
+    }
+
     public void onSensorChanged(SensorEvent event)
     {
-        //Log.i("onSensorChanged", event.toString());
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
         {
-            SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
-            Log.i("rotationSensor", new Float(mRotationMatrix[0]).toString());
+            //SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
+            //Log.i("rotationSensor", new Float(mRotationMatrix[0]).toString());
+            //Log.i("rotation", new Float(event.values[0]).toString());
+
+            //if (pressed[0][0])
+                //Log.i("test", "It worked!");
+
+
+            rotationValues = new float[] {event.values[0], event.values[1], event.values[2]};
+
+            valuesDisplay = (TextView)findViewById(R.id.valsDisplay);
+            if (event != null)
+                valuesDisplay.setText(event.values[0] + ", " + event.values[1] + ", " + event.values[2]);
         }
     }
-    */
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 
 
     class CubeRenderer implements GLSurfaceView.Renderer, SensorEventListener
@@ -109,7 +257,7 @@ public class GameActivity extends ActionBarActivity
         public CubeRenderer()
         {
             // find the rotation-vector sensor
-            mSensor = mSensorManager.getDefaultSensor(
+            mSensor = sensorManager.getDefaultSensor(
                     Sensor.TYPE_ROTATION_VECTOR);
             cube = new Cube();
             // initialize the rotation matrix to identity
@@ -121,12 +269,12 @@ public class GameActivity extends ActionBarActivity
 
         public void start()
         {
-            mSensorManager.registerListener(this, mSensor, 10000);
+            sensorManager.registerListener(this, mSensor, 10000);
         }
 
         public void stop()
         {
-            mSensorManager.unregisterListener(this);
+            sensorManager.unregisterListener(this);
         }
 
         @Override
@@ -172,6 +320,7 @@ public class GameActivity extends ActionBarActivity
                     temp[i] = 2 * event.values[i];
                 }
                 */
+
                 SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
                 //Log.i("rotationSensor", new Float(mRotationMatrix[0]).toString());
             }
@@ -253,7 +402,8 @@ public class GameActivity extends ActionBarActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
+        {
             return true;
         }
 

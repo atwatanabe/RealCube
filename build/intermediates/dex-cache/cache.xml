@@ -2,6 +2,13 @@
 <items version="2" >
 
     <item
+        jar="D:\School\Spring2015\RealCube\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="D:\School\Spring2015\RealCube\app\build\intermediates\pre-dexed\debug\classes-1641e89cbd745b1bbe484d330ca1d29e683e302b.jar" />
+    </item>
+    <item
         jar="C:\Users\Anthony\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.0.0\support-annotations-22.0.0.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -21,13 +28,6 @@
         revision="21.1.2"
         sha1="d84409890828e07d344a3b9b1da545dba9897b51">
         <dex dex="D:\School\Spring2015\RealCube\app\build\intermediates\pre-dexed\debug\classes-44c4b227af54b366f42d2f1874d3bfa41b99ec01.jar" />
-    </item>
-    <item
-        jar="D:\School\Spring2015\RealCube\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.0.0\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
-        <dex dex="D:\School\Spring2015\RealCube\app\build\intermediates\pre-dexed\debug\classes-1641e89cbd745b1bbe484d330ca1d29e683e302b.jar" />
     </item>
 
 </items>

@@ -43,6 +43,15 @@
         android:layout_height="wrap_content"
         android:text="@string/moveLog"/>
 
+    <TextView
+        android:id="@+id/valsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0, 0, 0"
+        />
+
+
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -57,7 +66,7 @@
             <Button
                 android:id="@+id/upLeft"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/upCenter"
                 android:layout_width="wrap_content"
