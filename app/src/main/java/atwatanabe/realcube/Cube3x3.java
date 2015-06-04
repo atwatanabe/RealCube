@@ -75,6 +75,45 @@ public class Cube3x3
     public void up(boolean invert)
     {
         Log.i("Cube move", "up " + invert);
+        Color[][] up = sides.get("up");
+        Color tempCorner = up[0][0];
+        Color tempEdge = up[0][1];
+
+        Color[][] front = sides.get("front");
+        Color[][] left = sides.get("left");
+        Color[][] back = sides.get("back");
+        Color[][] right = sides.get("right");
+
+        if (invert)
+        {
+            up[0][0] = up[2][0];
+            up[2][0] = up[2][2];
+            up[2][2] = up[0][2];
+            up[0][2] = tempCorner;
+
+            up[0][1] = up[1][0];
+            up[1][0] = up[2][1];
+            up[2][1] = up[1][2];
+            up[0][1] = tempEdge;
+
+            Color[] temp = new Color[3];
+            System.arraycopy(front[0], 0, temp, 0, 3);
+            front[0] = right[0];
+            //rotate the edge around the up face
+            //can use a loop (could probably use a loop for the previous part, too
+        }
+        else
+        {
+            up[0][0] = up[0][2];
+            up[0][2] = up[2][2];
+            up[2][2] = up[2][0];
+            up[2][0] = tempCorner;
+
+            up[0][1] = up[1][2];
+            up[1][2] = up[2][1];
+            up[2][1] = up[1][0];
+            up[1][0] = tempEdge;
+        }
     }
 
     public void down(boolean invert)

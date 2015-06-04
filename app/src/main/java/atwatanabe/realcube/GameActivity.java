@@ -26,7 +26,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GameActivity extends ActionBarActivity implements SensorEventListener
 {
-    private Sensor sensor;
+    private Sensor accSensor;
+    //private Sensor rotSensor;
     private SensorManager sensorManager;
     private CubeRenderer renderer;
     private GLSurfaceView glView;
@@ -52,14 +53,22 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         setTitle(R.string.app_name);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_GAME);
+        accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        //rotSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        sensorManager.registerListener(this, accSensor, sensorManager.SENSOR_DELAY_GAME);
+        //sensorManager.registerListener(this, rotSensor, sensorManager.SENSOR_DELAY_GAME);
 
-        valXDisplay = (TextView)findViewById(R.id.valXDisplay);
-        valYDisplay = (TextView)findViewById(R.id.valYDisplay);
-        valYDisplay = (TextView)findViewById(R.id.valYDisplay);
+        //valXDisplay = (TextView)findViewById(R.id.valXDisplay);
+        //valYDisplay = (TextView)findViewById(R.id.valYDisplay);
+        //valYDisplay = (TextView)findViewById(R.id.valYDisplay);
 
-
+        /*
+        Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        if (gyro != null)
+            Log.i("gyroscope: ", "gyroscope exists!");
+        else
+            Log.i("gyroscope: ", "gyroscope does not exist!");
+        */
 
         //renderer = new CubeRenderer();
         //glView = new GLSurfaceView(this);
@@ -103,8 +112,6 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                     {
                         pressed[0][0] = false;
                         System.arraycopy(rotationValues, 0, stopValues, 0, 3);
-                        //Log.i("StartValues: ", new Float(startValues[0]).toString() + ", " + new Float(startValues[1]).toString() + ", " + new Float(startValues[2]).toString());
-                        //Log.i("StopValues: ", new Float(stopValues[0]).toString() + ", " + new Float(stopValues[1]).toString() + ", " + new Float(stopValues[2]).toString());
                         rotation largest = getLargest();
                         Command cmd = new LeftCommand(cube, false);
                         switch (largest)
@@ -646,7 +653,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, sensor, sensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, accSensor, sensorManager.SENSOR_DELAY_GAME);
+        //sensorManager.registerListener(this, rotSensor, sensorManager.SENSOR_DELAY_GAME);
         //renderer.start();
         //glView.onResume();
     }
@@ -667,29 +675,28 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
     public void onSensorChanged(SensorEvent event)
     {
-        if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
         {
-            //SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
-            //Log.i("rotationSensor", new Float(mRotationMatrix[0]).toString());
-            //Log.i("rotation", new Float(event.values[0]).toString());
-
-            //if (pressed[0][0])
-                //Log.i("test", "It worked!");
-
-
             rotationValues = new float[3];
             System.arraycopy(event.values, 0, rotationValues, 0, 3);
 
+            /*
             valXDisplay = (TextView)findViewById(R.id.valXDisplay);
             valYDisplay = (TextView)findViewById(R.id.valYDisplay);
             valZDisplay = (TextView)findViewById(R.id.valZDisplay);
-            if (event != null)
-            {
-                valXDisplay.setText(new Float(event.values[0]).toString());
-                valYDisplay.setText(new Float(event.values[1]).toString());
-                valZDisplay.setText(new Float(event.values[2]).toString());
-            }
+            valXDisplay.setText(Float.toString(event.values[0]));
+            valYDisplay.setText(Float.toString(event.values[1]));
+            valZDisplay.setText(Float.toString(event.values[2]));
+            */
         }
+        /*
+        else if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
+        {
+            rotationValues[2] = event.values[2];
+            if (event != null)
+                valZDisplay.setText(new Float(event.values[2]).toString());
+        }
+        */
     }
 
     @Override
@@ -707,7 +714,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
         public CubeRenderer()
         {
-            // find the rotation-vector sensor
+            // find the rotation-vector accSensor
             mSensor = sensorManager.getDefaultSensor(
                     Sensor.TYPE_ROTATION_VECTOR);
             cube = new Cube();
@@ -761,19 +768,9 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         @Override
         public void onSensorChanged(SensorEvent event)
         {
-            //Log.i("onSensorChanged", event.toString());
-            if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR)
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             {
-                /*
-                float[] temp = new float[event.values.length];
-                for (int i = 0; i < temp.length; ++i)
-                {
-                    temp[i] = 2 * event.values[i];
-                }
-                */
-
                 SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
-                //Log.i("rotationSensor", new Float(mRotationMatrix[0]).toString());
             }
         }
 
