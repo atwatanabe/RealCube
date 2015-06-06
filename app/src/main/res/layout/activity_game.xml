@@ -80,15 +80,18 @@
             <Button
                 android:id="@+id/upLeft"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"/>
             <Button
                 android:id="@+id/upCenter"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp" />
             <Button
                 android:id="@+id/upRight"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"/>
 
         </LinearLayout>
 
@@ -99,15 +102,18 @@
             <Button
                 android:id="@+id/middleLeft"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"/>
             <Button
                 android:id="@+id/middleCenter"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"/>
             <Button
                 android:id="@+id/middleRight"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"/>
 
         </LinearLayout>
 
@@ -118,15 +124,18 @@
             <Button
                 android:id="@+id/downLeft"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp" />
             <Button
                 android:id="@+id/downCenter"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"/>
             <Button
                 android:id="@+id/downRight"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"/>
 
         </LinearLayout>
 

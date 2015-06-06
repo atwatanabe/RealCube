@@ -19,6 +19,12 @@ public class CubeManipulator
         c.execute();
     }
 
+    public void clearHistory()
+    {
+        undoHistory = new Stack<Command>();
+        redoHistory = new Stack<Command>();
+    }
+
     public Command undo()
     {
         if (!undoHistory.isEmpty())

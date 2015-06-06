@@ -1,6 +1,7 @@
 package atwatanabe.realcube;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.support.v7.app.ActionBarActivity;
@@ -92,6 +93,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         cube = new Cube3x3();
         cubeManipulator = new CubeManipulator();
 
+        updateDisplay();
+
         //rotationValues = new float[3];
         startValues = new float[3];
         stopValues = new float[3];
@@ -151,6 +154,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                         mostRecentMove = cmd;
                         moveText.setText(cmd.toString());
                     }
+                    updateDisplay();
                     return true;
                 }
             }
@@ -207,6 +211,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                         mostRecentMove = cmd;
                         moveText.setText(cmd.toString());
                     }
+                    updateDisplay();
                     return true;
                 }
             }
@@ -264,6 +269,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                         mostRecentMove = cmd;
                         moveText.setText(cmd.toString());
                     }
+                    updateDisplay();
                     return true;
                 }
             }
@@ -321,6 +327,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                         mostRecentMove = cmd;
                         moveText.setText(cmd.toString());
                     }
+                    updateDisplay();
                     return true;
                 }
             }
@@ -378,6 +385,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                         mostRecentMove = cmd;
                         moveText.setText(cmd.toString());
                     }
+                    updateDisplay();
                     return true;
                 }
             }
@@ -433,6 +441,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                             mostRecentMove = cmd;
                             moveText.setText(cmd.toString());
                         }
+                        updateDisplay();
                         return true;
                     }
                 }
@@ -488,6 +497,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                             mostRecentMove = cmd;
                             moveText.setText(cmd.toString());
                         }
+                        updateDisplay();
                         return true;
                     }
                 }
@@ -543,6 +553,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                             mostRecentMove = cmd;
                             moveText.setText(cmd.toString());
                         }
+                        updateDisplay();
                         return true;
                     }
                 }
@@ -598,6 +609,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                             mostRecentMove = cmd;
                             moveText.setText(cmd.toString());
                         }
+                        updateDisplay();
                         return true;
                     }
                 }
@@ -613,6 +625,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                 mostRecentMove = cubeManipulator.undo();
                 if (mostRecentMove != null)
                     moveText.setText(mostRecentMove.toString());
+                updateDisplay();
             }
         });
 
@@ -623,9 +636,68 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                 mostRecentMove = cubeManipulator.redo();
                 if (mostRecentMove != null)
                     moveText.setText(mostRecentMove.toString());
+                updateDisplay();
             }
         });
 
+        Button solve = (Button)findViewById(R.id.solveButton);
+
+        solve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cube.initializeCube();
+                cubeManipulator.clearHistory();
+                updateDisplay();
+            }
+        });
+
+    }
+
+    public void updateDisplay()
+    {
+        Cube3x3.Color[][] front = cube.getFront();
+        for (int i = 0; i < 3; ++i)
+        {
+            for (int j = 0; j < 3; ++j)
+            {
+                Cube3x3.Color temp = front[i][j];
+                Button b = buttons[i][j];
+                switch (temp)
+                {
+                    case White:
+                    {
+                        b.setBackgroundColor(android.graphics.Color.WHITE);
+                        break;
+                    }
+                    case Blue:
+                    {
+                        b.setBackgroundColor(android.graphics.Color.BLUE);
+                        break;
+                    }
+                    case Red:
+                    {
+                        b.setBackgroundColor(android.graphics.Color.RED);
+                        break;
+                    }
+                    case Green:
+                    {
+                        b.setBackgroundColor(android.graphics.Color.GREEN);
+                        break;
+                    }
+                    case Orange:
+                    {
+                        b.setBackgroundColor(android.graphics.Color.BLACK);
+                        break;
+                    }
+                    case Yellow:
+                    {
+                        b.setBackgroundColor(android.graphics.Color.YELLOW);
+                        break;
+                    }
+                }
+
+            }
+        }
     }
 
     public enum rotation
